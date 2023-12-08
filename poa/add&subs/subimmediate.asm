@@ -1,0 +1,15 @@
+MOV AX,000Ah
+MOV BX,0002h
+MOV CL,00h
+
+SUB AX,BX
+
+JNC jump
+INC CL
+
+jump:
+MOV [1006h],AX
+MOV [1004h],CL
+
+HLT
+RET
