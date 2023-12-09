@@ -1,56 +1,70 @@
-def decimalToBinary(dec, n):
-    binary = format(int(dec), f'0{n}b')
-    return binary
+def restoring(a, q, m, n, n_len):
+    print(f"{n}\t{a}\t\t{q}")
+    if n==0:
+        return  f"Quotient : bin : {q} Deci : {int(q,2)}\n Remainder : bin : {a},deci : {int(a,2)}"
+    a, q = lrs(a,q)
+    print(f"{n}\t{a}\t\t{q}\t\tAfter LRS ")
+    a = add(a,complement(m))
+    print(f"{n}\t{a}\t\t{q}\t\tAfter A<- A - M ")
+    if len(a) > n_len:
+        a = a[1:]
+    if a[0] == '1':
+        print("A<0")
+        q = q.replace('_','0')
+        a = add(a,m)
+        if len(a) > n_len:
+            a = a[1:]
+        print(f"{n}\t{a}\t\t{q}\t\tAfter A<- A + M ")
+    else:
+        print("A>0")
+        q = q.replace('_','1')
+    
+    return restoring(a, q, m, n-1,n_len)
 
-def twoComplement(a, n):
+
+def add(a,b):
+    max_len = max(len(a), len(b))
+    a = a.zfill(max_len)
+    b = b.zfill(max_len)
+    result = ''
+    carry = 0
+    for i in range(max_len - 1, -1, -1):
+        r = carry
+        r += 1 if a[i] == '1' else 0
+        r += 1 if b[i] == '1' else 0
+        result = ('1' if r % 2 == 1 else '0') + result
+        carry = 0 if r < 2 else 1
+    if carry != 0:
+        result = '1' + result
+    return result.zfill(max_len)
+
+# enter binary in string 
+def complement(a):
     res = ""
     for i in a:
-        if i == '0':
-            res += '1'
-        elif i == '1':
+        if  i == '1' :
             res += '0'
-    result = addBinary(res, '1', n)
-    return result
+        elif i == '0':
+            res += '1'
+            
+    res = add(res,'1')
+    return res
 
-def negativeDec(dec, n):
-    absolute = abs(int(dec))
-    binary = decimalToBinary(absolute, n)
-    result = twoComplement(binary, n)
-    return result
+def lrs(a,q):
+    a = a[1:] +q[0]
+    q = q[1:] +"_"
+    return a,q
 
-def addBinary(b1, b2, n):
-    result = bin(int(b1, 2) + int(b2, 2))
-    resultbin = result[2:]
-    return resultbin
+q = int(input("Enter Q : "))
+m = int(input("Enter M : "))
+# q,m = int(5), int(14)
+n = len(bin(max(abs(q),abs(m)))[2:])+1
 
-def ars(a, Q, q):
-    q = a[-1]
-    Q = Q[:-1] + q
-    a = a[0] + a[:-1]
-    return a, Q, q
-
-def booth(a, Q, q, M, minusM, n):
-    while n != 0:
-        if Q[-1] == '0' and q[0] == '1':
-            a = addBinary(a, minusM, 4)  # Corrected to subtract M
-            a, Q, q = ars(a, Q, q)
-            print(f'A={a}, Q={Q}, q={q} --> A=A+(-M), ARS')
-        else:
-            a, Q, q = ars(a, Q, q)
-            print(f'A={a}, Q={Q}, q={q} --> ARS')
-        n -= 1
-    print(f'The A is {a} the Q is {Q} the q is {q}')
-
-def main():
-    Q = '1011'
-    M = '1001'
-    Qbin = decimalToBinary(Q, 4)
-    MBin = decimalToBinary(M, 4)
-    MminusBin = twoComplement(MBin, 4)
-
-    print(f'Q is {Qbin}')
-    print(f'M is {MBin}')
-    print(f'-M is {MminusBin}')
-    booth('0000', '0011', '0', '1001', '0111', 4)
-
-main()
+q = bin(q)[2:].zfill(n) if q>=0 else complement(bin(q)[3:].zfill(n))
+m = bin(m)[2:].zfill(n) if m>=0 else complement(bin(m)[3:].zfill(n))
+print(q,m)
+print(n)
+print(f"M = {m}, Q = {q}, A={'0'*n}")
+print("Count\tA\t\tQ\t\tAny action")
+print("---------------------------------------------------------------")
+print(restoring('0'*n, q.zfill(n), m.zfill(n), n, n))

@@ -62,7 +62,7 @@ print(f'n is {n}')
 
 a = bin(a)[2:].zfill(n) if a>=0 else complement(bin(a)[3:].zfill(n))
 b = bin(b)[2:].zfill(n) if b>=0 else complement(bin(b)[3:].zfill(n))
-print(f"M = {a}, Q = {b}, A={'0'*n}, Count={n}")
+print(f"Q = {a}, M = {b}, A={'0'*n}, Count={n}")
 print("Count\tA\t\tQ\t\tQ1")
 print("---------------------------------------------------------------")
 print(booth('0'*n, b.zfill(n), a.zfill(n), '0', n, n))

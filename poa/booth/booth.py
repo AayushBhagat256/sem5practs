@@ -1,34 +1,18 @@
-def decimalToBinary(dec,n):
-    binary = format(int(dec),f'0{n}b')
-    return binary
-# print(decimalToBinary(3,3))
-
-def twoComplement(a,n):
-    res = ""
-    for i in a:
-        if i == '0':
-            res+= '1'
-        elif i == '1':
-            res+= '0'
-    result = addBinary(res,'1',n)
+def add(a,b):
+    maxlen = max(len(a),len(b))
+    a = a.zfill(maxlen)
+    b = b.zfill(maxlen)
+    result = ''
+    carry = 0
+    for i in range(maxlen-1,-1,-1):
+        r = carry
+        r+=1 if a[i]=='1'else 0
+        r+=1 if b[i]=='1'else 0
+        result = ('1' if r%2==1 else '0')+result
+        carry = 0 if r<2 else 1
+    if carry!=0:
+        result = '1'+result
     return result
-    
-
-def negativeDec(dec,n):
-    absolute = abs(int(dec))
-    binary = decimalToBinary(absolute,n)
-    # now we find twos complement of binary
-    result = twoComplement(binary,n)
-    return result
-    
-    
-def addBinary(b1,b2,n):
-    result = bin(int(b1,2)+int(b2,2))
-    resultbin = result[2:]
-    return resultbin
-
-# print(negativeDec('-7',4))
-# print(decimalToBinary('3',4))
 
 def ars(a,Q,q):
     q = Q[-1]
@@ -36,36 +20,57 @@ def ars(a,Q,q):
     a = a[0]+a[:-1]
     return a,Q,q
 
-def booth(a,Q,q,M,minusM,n):
-    while n!=0:
-        if Q[-1]=='0' and q[0]=='1':
-            a = addBinary(a,M,4)
-            a,Q,q = ars(a,Q,q)
-            print(f'A={a},Q={Q},q={q} --> A=A+M,ARS')
-        elif Q[-1]=='1' and q[0] == '0':
-            a = addBinary(a,minusM,4)
-            a,Q,q = ars(a,Q,q)
-            print(f'A={a},Q={Q},q={q} --> A=A+(-M),ARS')
-        else:
-            a,Q,q = ars(a,Q,q)
-            print(f'A={a},Q={Q},q={q} --> ARS') 
-        n-=1
-    print(f'The A is {a} the Q is {Q} the q is{q}')
+def complement(a):
+    res = ''
+    for i in a:
+        if i == '1':
+            res += '0'
+        elif i == '0':
+            res += '1'
+    res = add(res,'1')
+    return res
+
+def booth(a,Q,q,n,nlen,M):
+    print(f'{n}\t{a}\t\t{Q}\t\t{q}')
+    if n==0:
+        return print(f"A is {a} and Q is {Q}")
+    elif Q[-1]=='1' and q[-1]=='0':
+        print("10<--")
+        a = add(a,complement(M.zfill(nlen)))
+        if len(a)!=nlen:
+            a = a[1:]
+        print(f"{n}\t{a}\t\t{Q}\t\t{q}\t before ars")
+        a,Q,q = ars(a,Q,q)
+    elif Q[-1]=='0' and q[-1]=='1':
+        print("01<---")
+        a = add(a,M)
+        if len(a)!=nlen:
+            a = a[1:]
+        print(f"{n}\t{a}\t\t{Q}\t\t{q}\t before ars")
+        a,Q,q = ars(a,Q,q)
+    elif (Q[-1]=='1' and q[-1]=='1') or (Q[-1]=='0' and q[-1]=='0'):
+        print("00 or 11 <-----")
+        a,Q,q = ars(a,Q,q)
+    return booth(a,Q,q,n-1,nlen,M)
+        
+        
         
 
 def main():
-    Q = '3'
-    M = '-7'
-    Qbin = decimalToBinary(Q,4)
-    MBin = negativeDec(M,4)
-    MminusBin = decimalToBinary(str(int(abs(int('-7')))),4)
+    a = int(input("Enter Q : "))
+    b = int(input("Enter M : "))
+    n = len(bin(max(abs(a),abs(b)))[2:])+1
     
-    print(f'Q is {Qbin}')
-    print(f'M is {MBin}')
-    print(f'-M is {MminusBin}')
-    booth('0000','0011','0',MBin,MminusBin,4)
+    a = bin(a)[2:].zfill(n) if a>=0 else complement(bin(a)[3:].zfill(n))
+    b = bin(b)[2:].zfill(n) if b>=0 else complement(bin(b)[3:].zfill(n))
+    
+    print(f'M is {b} Q is {a} and n is {n}')
+    print("Count\tA\tQ\tq")
+    print('-------------------------------------------')
+    print(booth('0'*n,a.zfill(n),'0',n,n,b.zfill(n)))
+    
     
 main()
     
-
+    
     
