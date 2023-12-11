@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>json data handling</p>
+    <button onclick="handlejson()">Click here</button>
+    <div id="display"></div>
+    <script>
+        function handlejson(){
+            fetch('./name.json').then(res=>{
+                return res.json()
+            }).then(data=>{
+                console.log(data)
+                var op = document.getElementById("display")
+                op.innerHTML = ''
+
+                data.forEach(
+                    person=>{
+                        var name = person.name
+                        var loc = person.loc
+
+                        var info = document.createElement('div')
+                        info.innerHTML = `<p>name is ${name} and loc is ${loc}</p>`
+
+                        op.appendChild(info)
+                    }
+                )
+            })
+        }
+    </script>
+</body>
+</html>

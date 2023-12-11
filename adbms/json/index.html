@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON</title>
+</head>
+<body>
+    <p>Hello this is json Data file</p>
+    <button onclick="handleJson()">Load json</button>
+
+    <script>
+        function handleJson(){
+            console.log("Clicked")
+            fetch('./sample.json').then((res)=>{
+                return res.json()
+            }).then((data)=>{
+                console.log(data)
+                //Temporal execution:
+                console.log("User created after december 1 2016")
+                const filterUser = data.filter(user => new Date(user.created_at) > new Date('2016-12-01T00:00:00.000Z'))
+                console.log(filterUser)
+                console.log("User whoses last login was at 2016-12-02T01:17:29.310Z")
+                //we need to use getTIme here
+                const filter2 = data.filter(user=>new Date(user.last_login).getTime()==new Date("2016-12-02T01:17:29.310Z").getTime())
+                console.log(filter2)
+                console.log("User updated before december")
+                const filter3 = data.filter(user=> new Date(user.updated_at)<new Date("2016-12-01T00:00:00.000Z"))
+                console.log(filter3)
+                //Normal finding our user and all other traditional cases
+                console.log("Info about userID = 584a9d13e808bcf75f05f580")
+                const userinfo = data.filter(user=>user.user_id=="584a9d13e808bcf75f05f580")
+                console.log(userinfo)
+
+                const trial = data.find(user=>user.user_id=="5840b954da0529cd293d76fe")
+                if (trial){
+                    console.log(`User name is ${trial.given_name}`)
+                }
+                else{
+                    console.log("IDK")
+                }
+
+            })
+        }
+    </script>
+</body>
+</html>
