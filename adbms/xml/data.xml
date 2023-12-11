@@ -1,0 +1,16 @@
+<catalog>
+    <Books>
+        <Book id="1" price="20$">
+            <title>hello1</title>
+            <author>lordaayush</author>
+        </Book>
+        <Book id="2" price="20$">
+            <title>hello2</title>
+            <author>king</author>
+        </Book>
+        <Book id="3" price="120$">
+            <title>the secret</title>
+            <author>idk</author>
+        </Book>
+    </Books>
+</catalog>
