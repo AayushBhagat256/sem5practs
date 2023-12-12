@@ -1,0 +1,17 @@
+<Office>
+    <emp id="1">
+        <name>aayush</name>
+        <salary>1000</salary>
+        <post>SDE</post>
+    </emp>
+    <emp id="3">
+        <name>tony</name>
+        <salary>200</salary>
+        <post>SDE</post>
+    </emp>
+    <emp id="4">
+        <name>virat</name>
+        <salary>120</salary>
+        <post>PR</post>
+    </emp>
+<emp id="7"><name>messi</name><sal>500</sal><post>FB</post></emp></Office>

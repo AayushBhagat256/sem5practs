@@ -1,7 +1,7 @@
 import xml.etree.cElementTree as ET
 
 tree = ET.parse('./data.xml')
-books = tree.findall('./Books/Book')
+books = tree.findall('.//Book')
 
 
 for book in books:
@@ -41,4 +41,5 @@ if book is not None:
         print(f'Title element not found for Book with ID {book_id}.')
 else:
     print(f'Book with ID {book_id} not found.')
+    
 
